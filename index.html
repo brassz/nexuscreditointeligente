@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crédito Inteligente para CNPJ</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#0057FF;
+  --neon:#00A3FF;
+  --white:#F5F7FA;
+  --muted:rgba(245,247,250,0.5);
+}
+html{scroll-behavior:auto}
+body{
+  background:#060810;
+  color:var(--white);
+  font-family:'Inter',sans-serif;
+  overflow-x:hidden;
+}
+
+/* CANVAS BG */
+#bg-canvas{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  z-index:0;pointer-events:none;
+}
+
+/* NAV */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:1.25rem 3rem;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:background .4s;
+}
+#nav.scrolled{background:rgba(6,8,16,0.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,163,255,0.1)}
+.logo{display:flex;align-items:center;line-height:0}
+.logo img{height:36px;width:auto;display:block;filter:drop-shadow(0 0 10px rgba(0,163,255,.45))}
+footer .fl{display:flex;align-items:center;line-height:0}
+footer .fl img{height:28px;width:auto;display:block;filter:drop-shadow(0 0 8px rgba(0,163,255,.35))}
+.nav-pill{
+  background:rgba(0,87,255,0.15);border:1px solid rgba(0,87,255,0.4);
+  color:var(--white);border-radius:50px;padding:.5rem 1.5rem;font-size:.85rem;font-weight:600;
+  cursor:pointer;transition:all .25s;font-family:'Space Grotesk',sans-serif;
+}
+.nav-pill:hover{background:var(--blue);border-color:var(--blue);transform:translateY(-1px)}
+
+/* SCROLL CONTAINER */
+#scroll-wrap{position:relative;z-index:1}
+
+/* ── SCENE 1: HERO ── */
+#scene-hero{
+  height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:2rem;position:relative;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--neon);margin-bottom:2rem;opacity:0;
+  animation:riseIn .8s .2s ease forwards;
+}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--neon);
+  animation:pulseAnim 2s infinite}
+@keyframes pulseAnim{0%,100%{box-shadow:0 0 0 0 rgba(0,163,255,.6)}50%{box-shadow:0 0 0 8px rgba(0,163,255,0)}}
+.hero-h1{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(3rem,8vw,7rem);font-weight:800;line-height:.95;
+  letter-spacing:-.04em;margin-bottom:1.5rem;
+  opacity:0;animation:riseIn .9s .4s ease forwards;
+}
+.hero-h1 .line-blue{
+  display:block;
+  background:linear-gradient(90deg,var(--blue),var(--neon),#fff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{
+  font-size:1.1rem;color:var(--muted);max-width:500px;line-height:1.7;
+  margin-bottom:3rem;opacity:0;animation:riseIn .9s .6s ease forwards;
+}
+.hero-btns{display:flex;gap:1rem;justify-content:center}
+.hero-cta-group{
+  display:flex;flex-direction:column;align-items:center;gap:2rem;
+  opacity:0;animation:riseIn .9s .8s ease forwards;
+}
+.scroll-hint{
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  opacity:0;animation:riseIn 1s 1.1s ease forwards;
+}
+.btn-glow{
+  padding:1rem 2.25rem;border-radius:50px;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--blue),var(--neon));
+  color:#fff;font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;
+  transition:all .3s;position:relative;overflow:hidden;
+}
+.btn-glow::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--neon),var(--blue));
+  opacity:0;transition:opacity .3s;
+}
+.btn-glow:hover::after{opacity:1}
+.btn-glow span{position:relative;z-index:1}
+.btn-glow:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,87,255,.5)}
+.btn-outline{
+  padding:1rem 2.25rem;border-radius:50px;
+  border:1px solid rgba(245,247,250,.2);background:transparent;
+  color:var(--white);font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:600;
+  cursor:pointer;transition:all .3s;
+}
+.btn-outline:hover{border-color:rgba(0,163,255,.6);color:var(--neon)}
+.scroll-hint span{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--neon),transparent);
+  animation:scrollLineAnim 1.8s infinite}
+@keyframes scrollLineAnim{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@keyframes riseIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SCROLL SECTIONS (pinned storytelling) ── */
+.story-section{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:6rem 2rem;position:relative;
+}
+
+/* STICKY TEXT REVEAL */
+.sticky-block{
+  position:sticky;top:0;height:100vh;display:flex;
+  align-items:center;justify-content:center;
+  overflow:hidden;
+}
+
+/* scene wrappers */
+.scene-content{
+  max-width:1100px;width:100%;display:grid;
+  grid-template-columns:1fr 1fr;gap:5rem;align-items:center;
+}
+.scene-content.center{
+  grid-template-columns:1fr;text-align:center;max-width:780px;
+}
+
+/* text blocks */
+.scene-eye{
+  font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--neon);margin-bottom:1rem;
+}
+.scene-h2{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(2rem,4.5vw,3.8rem);font-weight:800;
+  line-height:1.05;letter-spacing:-.03em;margin-bottom:1.25rem;
+}
+.scene-body{font-size:1.05rem;color:var(--muted);line-height:1.75;margin-bottom:1.75rem}
+
+/* divider line */
+.h-rule{
+  width:60px;height:2px;margin-bottom:1.5rem;
+  background:linear-gradient(to right,var(--blue),var(--neon));
+}
+
+/* REVEAL ON SCROLL */
+.reveal{
+  opacity:0;transform:translateY(48px);
+  transition:opacity .8s ease,transform .8s ease;
+}
+.reveal.vis{opacity:1;transform:translateY(0)}
+.reveal-left{
+  opacity:0;transform:translateX(-60px);
+  transition:opacity .9s ease,transform .9s ease;
+}
+.reveal-left.vis{opacity:1;transform:translateX(0)}
+.reveal-right{
+  opacity:0;transform:translateX(60px);
+  transition:opacity .9s ease,transform .9s ease;
+}
+.reveal-right.vis{opacity:1;transform:translateX(0)}
+
+/* ── SIMULATOR SCENE ── */
+.sim-panel{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(0,163,255,.18);
+  border-radius:28px;padding:2.5rem;
+  backdrop-filter:blur(12px);
+  box-shadow:0 0 80px rgba(0,87,255,.15),inset 0 1px 0 rgba(255,255,255,.06);
+}
+.sim-top{margin-bottom:2rem}
+.sim-lbl{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.sim-amount{
+  font-family:'Space Grotesk',sans-serif;font-size:3.5rem;font-weight:800;
+  letter-spacing:-.04em;color:var(--white);line-height:1;
+}
+.sim-amount span{color:var(--neon)}
+input[type=range]{
+  width:100%;height:3px;appearance:none;-webkit-appearance:none;
+  background:rgba(255,255,255,.1);border-radius:2px;outline:none;margin:1.5rem 0;
+  cursor:pointer;position:relative;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--neon));
+  border:2px solid #fff;cursor:pointer;transition:transform .2s;
+}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25)}
+.btn-sim{
+  width:100%;padding:1rem;border-radius:14px;border:none;cursor:pointer;
+  font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:700;
+  background:linear-gradient(135deg,var(--blue),var(--neon));
+  color:#fff;transition:all .25s;
+}
+.btn-sim:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,87,255,.45)}
+
+/* ── STEPS (how it works) ── */
+.steps-vert{display:flex;flex-direction:column;gap:0}
+.step-item{
+  display:flex;gap:1.5rem;align-items:flex-start;
+  padding:1.5rem 0;border-bottom:1px solid rgba(255,255,255,.06);
+  transition:all .3s;cursor:default;
+}
+.step-item:last-child{border-bottom:none}
+.step-item:hover .step-icon-wrap{border-color:var(--neon);box-shadow:0 0 24px rgba(0,163,255,.25)}
+.step-icon-wrap{
+  width:52px;height:52px;border-radius:50%;flex-shrink:0;
+  border:1px solid rgba(0,163,255,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;transition:all .3s;
+  background:rgba(0,87,255,.08);
+}
+.step-num-badge{
+  font-size:.62rem;font-weight:700;letter-spacing:.08em;
+  color:var(--neon);margin-bottom:.3rem;text-transform:uppercase;
+}
+.step-title{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:.3rem}
+.step-desc{font-size:.875rem;color:var(--muted);line-height:1.6}
+
+/* ── BENEFITS CARDS ── */
+#scene-benefits{min-height:auto;padding:6rem 2rem 8rem}
+.benefits-header{max-width:1100px;width:100%;margin:0 auto 3.5rem}
+.benefits-grid{
+  display:flex;justify-content:center;align-items:center;
+  flex-wrap:wrap;gap:2rem;max-width:1100px;margin:0 auto;
+}
+.benefit-card{
+  height:280px;width:200px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(0,163,255,.12);
+  border-radius:16px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 32px rgba(0,0,0,.3);
+  transition:transform .4s ease-out,box-shadow .4s ease-out,border-color .4s;
+  cursor:default;
+}
+.benefit-card:hover{
+  transform:translateY(-20px);
+  border-color:rgba(0,163,255,.45);
+  box-shadow:0 20px 60px rgba(0,87,255,.25);
+  z-index:2;
+}
+.benefit-card .title{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700;font-size:.95rem;
+  position:absolute;top:50%;left:0;right:0;
+  transform:translateY(-50%);
+  text-align:center;padding:0 1rem;line-height:1.3;
+  transition:top .4s ease,transform .4s ease,color .3s;
+  z-index:2;
+}
+.benefit-card:hover .title{
+  top:1.25rem;
+  transform:translateY(0);
+  color:var(--neon);
+}
+.benefit-card .card-desc{
+  position:absolute;top:4.5rem;left:0;right:0;
+  text-align:center;padding:0 1.25rem;
+  font-size:.72rem;color:var(--muted);line-height:1.55;
+  opacity:0;
+  transform:translateY(10px);
+  transition:opacity .35s ease .08s,transform .35s ease .08s;
+  pointer-events:none;
+}
+.benefit-card:hover .card-desc{
+  opacity:1;
+  transform:translateY(0);
+}
+.benefit-card .bar{
+  position:absolute;top:8.5rem;
+  height:4px;width:140px;left:50%;
+  transform:translateX(-50%);
+  opacity:0;
+  transition:opacity .35s ease .12s;
+}
+.benefit-card:hover .bar{opacity:1}
+.benefit-card .emptybar{
+  background:rgba(255,255,255,.08);
+  width:100%;height:100%;border-radius:2px;
+}
+.benefit-card .filledbar{
+  position:absolute;top:0;z-index:3;
+  width:0;height:100%;border-radius:2px;
+  background:linear-gradient(90deg,var(--blue),var(--neon));
+  transition:width .6s ease-out;
+}
+.benefit-card:hover .filledbar{width:120px;transition:width .4s ease-out}
+.benefit-card .circle{
+  position:absolute;top:10.5rem;
+  left:calc(50% - 60px);
+  opacity:0;
+  transition:opacity .35s ease .15s;
+}
+.benefit-card:hover .circle{opacity:1}
+.benefit-card .circle svg{width:120px;height:120px}
+.benefit-card .stroke{
+  fill:none;stroke:var(--neon);
+  stroke-width:3;
+  stroke-dasharray:360;stroke-dashoffset:360;
+  transition:stroke-dashoffset .6s ease-out;
+}
+.benefit-card:hover .stroke{stroke-dashoffset:0}
+
+/* ── TRUST NUMBERS ── */
+.trust-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;
+  align-items:start;
+}
+.trust-item{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+}
+.trust-item .t-num{
+  min-height:3.5rem;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(1.75rem,3.2vw,2.75rem);
+  font-weight:800;line-height:1;white-space:nowrap;
+  background:linear-gradient(135deg,var(--blue),var(--neon));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  letter-spacing:-.03em;margin-bottom:.5rem;
+}
+.trust-item .t-lbl{
+  font-size:.875rem;color:var(--muted);line-height:1.5;
+  max-width:11rem;
+}
+
+/* ── TESTIMONIALS ── */
+.testi-strip{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;
+}
+.testi-c{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;padding:1.5rem;position:relative;
+}
+.testi-c::before{
+  content:'';position:absolute;top:0;left:1.5rem;right:1.5rem;height:1px;
+  background:linear-gradient(to right,transparent,rgba(0,163,255,.4),transparent);
+}
+.testi-stars{color:#FBBF24;font-size:.85rem;margin-bottom:.75rem;letter-spacing:.1em}
+.testi-q{font-size:.875rem;color:var(--white);line-height:1.7;margin-bottom:1.25rem;font-style:italic}
+.testi-q em{color:var(--neon);font-style:normal;font-weight:600}
+.testi-who{display:flex;align-items:center;gap:.75rem}
+.testi-av{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--neon));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0;
+}
+.testi-nm{font-size:.875rem;font-weight:600}
+.testi-mt{font-size:.72rem;color:var(--muted)}
+
+/* ── FINAL CTA ── */
+#scene-cta{
+  min-height:100vh;display:flex;align-items:center;
+  justify-content:center;text-align:center;padding:4rem 2rem;
+  position:relative;overflow:hidden;
+}
+.cta-glow{
+  position:absolute;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,87,255,.25) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:ctaPulse 4s infinite;pointer-events:none;
+}
+@keyframes ctaPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.15);opacity:.5}}
+.cta-inner{position:relative;z-index:1;max-width:680px}
+.cta-h2{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(2.5rem,6vw,5.5rem);font-weight:800;
+  line-height:.95;letter-spacing:-.04em;margin-bottom:1.5rem;
+}
+.cta-h2 em{
+  font-style:normal;display:block;
+  background:linear-gradient(90deg,var(--blue),var(--neon));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.cta-sub{font-size:1.1rem;color:var(--muted);margin-bottom:2.5rem;line-height:1.7}
+.cta-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+
+/* ── FOOTER ── */
+footer{
+  padding:2rem 3rem;display:flex;justify-content:space-between;align-items:center;
+  border-top:1px solid rgba(255,255,255,.06);position:relative;z-index:1;
+}
+footer .fr{font-size:.75rem;color:var(--muted);text-align:right}
+
+/* ── CHAT BOT FLOAT ── */
+#bot-btn{
+  position:fixed;bottom:2rem;right:2rem;z-index:200;
+  width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;
+  background:linear-gradient(135deg,var(--blue),var(--neon));
+  font-size:1.5rem;
+  box-shadow:0 4px 32px rgba(0,87,255,.6);
+  transition:all .2s;display:flex;align-items:center;justify-content:center;
+}
+#bot-btn:hover{transform:scale(1.1);box-shadow:0 8px 48px rgba(0,87,255,.8)}
+#bot-panel{
+  position:fixed;bottom:5.5rem;right:2rem;z-index:200;
+  width:310px;background:rgba(10,14,28,.97);
+  border:1px solid rgba(0,163,255,.2);border-radius:22px;
+  overflow:hidden;display:none;
+  box-shadow:0 24px 80px rgba(0,0,0,.6);backdrop-filter:blur(20px);
+}
+#bot-panel.open{display:block}
+.bot-head{
+  padding:.9rem 1.25rem;
+  background:linear-gradient(135deg,var(--blue),var(--neon));
+  display:flex;align-items:center;gap:.6rem;
+}
+.bot-avatar{width:30px;height:30px;display:flex;align-items:center;justify-content:center}
+.bot-avatar img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 6px rgba(0,163,255,.5))}
+.bot-head-info{font-size:.8rem}
+.bot-head-name{font-weight:700}
+.bot-head-status{opacity:.85;font-size:.68rem}
+.bot-body{padding:1rem 1.1rem}
+.bot-msg{
+  background:rgba(255,255,255,.06);border-radius:12px 12px 12px 4px;
+  padding:.7rem .9rem;font-size:.825rem;line-height:1.5;margin-bottom:.8rem;
+}
+.bot-opts{display:flex;flex-direction:column;gap:.4rem}
+.bot-opt{
+  background:rgba(0,87,255,.1);border:1px solid rgba(0,87,255,.2);
+  border-radius:10px;padding:.5rem .9rem;font-size:.78rem;font-weight:600;
+  color:var(--white);cursor:pointer;transition:all .15s;text-align:left;
+}
+.bot-opt:hover{background:rgba(0,87,255,.25);border-color:rgba(0,87,255,.5)}
+
+/* PROGRESS BAR */
+#progress{
+  position:fixed;top:0;left:0;height:2px;z-index:999;
+  background:linear-gradient(to right,var(--blue),var(--neon));
+  width:0%;transition:width .08s linear;
+}
+
+/* ── NOOMO-STYLE FX ── */
+#grain{
+  position:fixed;inset:-20%;z-index:90;pointer-events:none;opacity:.04;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  animation:grainShift .5s steps(4) infinite;
+}
+@keyframes grainShift{
+  0%,100%{transform:translate(0,0)}
+  25%{transform:translate(-2%,-3%)}
+  50%{transform:translate(3%,1%)}
+  75%{transform:translate(-1%,4%)}
+}
+.ambient-orb{
+  position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0;
+  opacity:.32;transition:transform .1s linear;
+}
+.orb-1{width:520px;height:520px;background:rgba(0,87,255,.28);top:8%;left:0}
+.orb-2{width:420px;height:420px;background:rgba(0,163,255,.22);top:42%;right:-5%}
+.orb-3{width:360px;height:360px;background:rgba(0,51,153,.28);bottom:8%;left:28%}
+#scroll-hud{
+  position:fixed;right:2rem;bottom:2rem;z-index:95;pointer-events:none;
+  font-family:'Space Grotesk',sans-serif;text-align:right;
+  opacity:0;transform:translateY(12px);transition:opacity .4s,transform .4s;
+}
+#scroll-hud.vis{opacity:1;transform:translateY(0)}
+#scroll-hud .hud-label{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+#scroll-hud .hud-pct{font-size:2.4rem;font-weight:800;line-height:1;color:var(--white);letter-spacing:-.04em}
+#scroll-hud .hud-pct em{font-style:normal;font-size:.95rem;color:var(--neon);margin-left:2px}
+#scroll-hud .hud-bar{width:108px;height:2px;background:rgba(255,255,255,.1);margin-top:.55rem;margin-left:auto;border-radius:2px;overflow:hidden}
+#scroll-hud .hud-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--neon));width:0;transition:width .08s linear}
+.scene-inner{will-change:transform,opacity,filter;transform-origin:center bottom}
+.cinematic-section{overflow:hidden}
+
+/* SECTION SEPARATOR LINES */
+.sep{
+  width:100%;height:1px;
+  background:linear-gradient(to right,transparent,rgba(0,163,255,.15),transparent);
+  position:relative;z-index:1;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .scene-content{grid-template-columns:1fr;gap:3rem}
+  .trust-row{grid-template-columns:1fr;gap:2rem}
+  .testi-strip{grid-template-columns:1fr}
+  .benefits-grid{gap:1.25rem}
+  .benefit-card{width:calc(50% - .75rem);min-width:155px;height:260px}
+  .benefit-card .bar{width:110px}
+  .benefit-card:hover .filledbar{width:95px}
+  /* Mobile: toque revela o conteúdo */
+  .benefit-card.is-open .title{top:1.25rem;transform:translateY(0);color:var(--neon)}
+  .benefit-card.is-open .card-desc{opacity:1;transform:translateY(0)}
+  .benefit-card.is-open .bar,.benefit-card.is-open .circle{opacity:1}
+  .benefit-card.is-open .filledbar{width:95px}
+  .benefit-card.is-open .stroke{stroke-dashoffset:0}
+  .benefit-card.is-open{transform:translateY(-12px);border-color:rgba(0,163,255,.45)}
+  #nav{padding:1rem 1.5rem}
+  footer{flex-direction:column;gap:1rem;text-align:center}
+  footer .fr{text-align:center}
+  #scroll-hud{display:none}
+}
+@media(max-width:400px){
+  .benefit-card{width:100%;max-width:220px}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<canvas id="bg-canvas"></canvas>
+<div class="ambient-orb orb-1"></div>
+<div class="ambient-orb orb-2"></div>
+<div class="ambient-orb orb-3"></div>
+<div id="grain"></div>
+<div id="scroll-hud">
+  <div class="hud-label">Scroll</div>
+  <div class="hud-pct"><span id="hud-num">0</span><em>%</em></div>
+  <div class="hud-bar"><div class="hud-bar-fill" id="hud-bar"></div></div>
+</div>
+
+<nav id="nav">
+  <a href="/" class="logo" aria-label="Crédito Inteligente">
+    <img src="/nexus-logo.png" alt="Crédito Inteligente">
+  </a>
+  <button class="nav-pill" onclick="goToFormulario()">Simular agora</button>
+</nav>
+
+<div id="scroll-wrap">
+
+  <!-- ── SCENE 1: HERO ── -->
+  <section id="scene-hero">
+    <div class="hero-eyebrow"><span class="pulse"></span>Crédito empresarial · Exclusivo CNPJ</div>
+    <h1 class="hero-h1">
+      Capital para
+      <span class="line-blue">sua empresa</span>
+    </h1>
+    <div class="hero-cta-group">
+      <div class="hero-btns">
+        <button class="btn-glow" onclick="goToFormulario()"><span>Simular gratuitamente →</span></button>
+      </div>
+      <div class="scroll-hint">
+        <span>Role para descobrir</span>
+        <div class="scroll-line"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCENE 2: PROBLEMA / SOLUÇÃO ── -->
+  <div class="sep"></div>
+  <section class="story-section" style="background:rgba(0,87,255,.03)">
+    <div class="scene-content">
+      <div class="reveal-left">
+        <div class="scene-eye">O problema</div>
+        <div class="h-rule"></div>
+        <h2 class="scene-h2">O fornecedor cobra amanhã. O banco responde: "Em análise."</h2>
+        <p class="scene-body">Dias no vácuo. Contrato social enviado de novo. Taxa que só aparece quando o caixa já apertou. Cada "não" pode travar o CNPJ — sem ninguém ter avisado antes. Quem precisa de capital de giro paga o preço da burocracia.</p>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+          <span style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#FCA5A5;border-radius:50px;padding:.4rem 1rem;font-size:.75rem;font-weight:700">❌ Dias sem resposta</span>
+          <span style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#FCA5A5;border-radius:50px;padding:.4rem 1rem;font-size:.75rem;font-weight:700">❌ CNPJ consultado à toa</span>
+          <span style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#FCA5A5;border-radius:50px;padding:.4rem 1rem;font-size:.75rem;font-weight:700">❌ Taxa surpresa no final</span>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="scene-eye">A solução</div>
+        <div class="h-rule"></div>
+        <h2 class="scene-h2" style="color:var(--neon)">Resposta em minutos — não em dias.</h2>
+        <p class="scene-body">Simule agora e veja parcela e taxa antes de informar o CNPJ. Nossa IA cruza o perfil da sua empresa com as melhores linhas do mercado em segundos. Sem "em análise" no escuro. Sem documento enviado à toa. Você decide com clareza — não com ansiedade.</p>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+          <span style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#86EFAC;border-radius:50px;padding:.4rem 1rem;font-size:.75rem;font-weight:700">✅ Resposta em minutos</span>
+          <span style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#86EFAC;border-radius:50px;padding:.4rem 1rem;font-size:.75rem;font-weight:700">✅ Simule sem consultar CNPJ</span>
+          <span style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#86EFAC;border-radius:50px;padding:.4rem 1rem;font-size:.75rem;font-weight:700">✅ Taxa clara desde o início</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCENE 3: SIMULATOR ── -->
+  <div class="sep"></div>
+  <section class="story-section" id="scene-sim">
+    <div class="scene-content">
+      <div class="reveal-left">
+        <div class="scene-eye">Simulador inteligente</div>
+        <div class="h-rule"></div>
+        <h2 class="scene-h2">Veja a parcela da sua empresa antes de qualquer compromisso.</h2>
+        <p class="scene-body">Mova o slider. Veja os números em tempo real. Simulação sem consulta ao CNPJ. Só avançamos com empresas ativas.</p>
+        <div style="margin-top:2rem;display:flex;flex-direction:column;gap:.75rem">
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.9rem">
+            <span style="width:28px;height:28px;border-radius:50%;background:rgba(0,163,255,.15);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0">⚡</span>
+            <span style="color:var(--muted)">Aprovação em <strong style="color:var(--white)">até 4 horas</strong></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.9rem">
+            <span style="width:28px;height:28px;border-radius:50%;background:rgba(0,163,255,.15);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0">🔒</span>
+            <span style="color:var(--muted)">Dados protegidos com <strong style="color:var(--white)">criptografia</strong></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.9rem">
+            <span style="width:28px;height:28px;border-radius:50%;background:rgba(0,163,255,.15);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0">📊</span>
+            <span style="color:var(--muted)">+385 aprovações <strong style="color:var(--white)">esse mês</strong></span>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-right" id="sim-anchor">
+        <div class="sim-panel">
+          <div class="sim-top">
+            <div class="sim-lbl">Quanto sua empresa precisa?</div>
+            <div class="sim-amount">R$ <span id="s-val">15.000</span></div>
+          </div>
+          <input type="range" id="s-range" min="500" max="50000" step="500" value="15000" oninput="calcSim(this.value)">
+          <div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-top:-.75rem;margin-bottom:1.25rem">
+            <span>R$ 500</span><span>R$ 50.000</span>
+          </div>
+          <button class="btn-sim" onclick="goToFormulario()">Quero essa proposta →</button>
+          <p style="text-align:center;font-size:.68rem;color:var(--muted);margin-top:.75rem">Exclusivo CNPJ · valores estimados · sujeitos a análise</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCENE 4: HOW IT WORKS ── -->
+  <div class="sep"></div>
+  <section class="story-section" id="scene-how" style="background:rgba(0,87,255,.03)">
+    <div class="scene-content">
+      <div class="reveal-left">
+        <div class="scene-eye">Processo</div>
+        <div class="h-rule"></div>
+        <h2 class="scene-h2">Do pedido ao dinheiro em 4 movimentos.</h2>
+        <p class="scene-body">Cada etapa foi desenhada para eliminar fricção. Você avança, nós trabalhamos. Simples assim.</p>
+        <div style="margin-top:2rem;padding:1.25rem;background:rgba(0,163,255,.06);border:1px solid rgba(0,163,255,.12);border-radius:16px">
+          <div style="font-size:.75rem;font-weight:700;color:var(--neon);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem">Tempo médio</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:2.5rem;font-weight:800">8 <span style="font-size:1.1rem;color:var(--muted);font-weight:400">minutos</span></div>
+          <div style="font-size:.8rem;color:var(--muted)">da simulação até a proposta na tela</div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="steps-vert">
+          <div class="step-item">
+            <div class="step-icon-wrap">📱</div>
+            <div>
+              <div class="step-num-badge">Passo 01</div>
+              <div class="step-title">Informe o CNPJ</div>
+              <div class="step-desc">Formulário rápido para empresas e MEIs. 100% digital.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-icon-wrap">🧠</div>
+            <div>
+              <div class="step-num-badge">Passo 02</div>
+              <div class="step-title">IA analisa a empresa</div>
+              <div class="step-desc">Avaliamos faturamento, setor e histórico em segundos.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-icon-wrap">📄</div>
+            <div>
+              <div class="step-num-badge">Passo 03</div>
+              <div class="step-title">Envie só o essencial</div>
+              <div class="step-desc">Documentos digitais, pelo celular. Sem fila, sem cartório.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-icon-wrap">💰</div>
+            <div>
+              <div class="step-num-badge">Passo 04</div>
+              <div class="step-title">Dinheiro na conta</div>
+              <div class="step-desc">Liberação em até 24h. Você escolhe como receber.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCENE 5: BENEFÍCIOS ── -->
+  <div class="sep"></div>
+  <section class="story-section" id="scene-benefits">
+    <div style="max-width:1100px;width:100%">
+      <div class="benefits-header reveal">
+        <div class="scene-eye">Por que nós</div>
+        <div class="h-rule"></div>
+        <h2 class="scene-h2">Benefícios que fazem a diferença.</h2>
+        <p class="scene-body" style="max-width:520px">Passe o mouse sobre cada card para ver os detalhes do benefício.</p>
+      </div>
+      <div class="benefits-grid reveal" data-delay=".15s">
+        <div class="benefit-card">
+          <h3 class="title">⚡ Análise instantânea</h3>
+          <p class="card-desc">IA avalia o CNPJ em segundos, sem consulta ao birô de crédito.</p>
+          <div class="bar">
+            <div class="emptybar"></div>
+            <div class="filledbar"></div>
+          </div>
+          <div class="circle">
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <circle class="stroke" cx="60" cy="60" r="50"/>
+            </svg>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <h3 class="title">🔒 100% seguro</h3>
+          <p class="card-desc">Dados criptografados e proteção em todas as etapas.</p>
+          <div class="bar">
+            <div class="emptybar"></div>
+            <div class="filledbar"></div>
+          </div>
+          <div class="circle">
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <circle class="stroke" cx="60" cy="60" r="50"/>
+            </svg>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <h3 class="title">📊 Taxa transparente</h3>
+          <p class="card-desc">Veja parcela, prazo e taxa antes de qualquer compromisso.</p>
+          <div class="bar">
+            <div class="emptybar"></div>
+            <div class="filledbar"></div>
+          </div>
+          <div class="circle">
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <circle class="stroke" cx="60" cy="60" r="50"/>
+            </svg>
+          </div>
+        </div>
+        <div class="benefit-card">
+          <h3 class="title">💰 Aprovação rápida</h3>
+          <p class="card-desc">Proposta em até 4h e dinheiro na conta em 24h.</p>
+          <div class="bar">
+            <div class="emptybar"></div>
+            <div class="filledbar"></div>
+          </div>
+          <div class="circle">
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+              <circle class="stroke" cx="60" cy="60" r="50"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCENE 6: TRUST NUMBERS ── -->
+  <div class="sep"></div>
+  <section class="story-section">
+    <div class="scene-content center">
+      <div class="reveal">
+        <div class="scene-eye" style="text-align:center">Resultados reais</div>
+        <h2 class="scene-h2" style="text-align:center">Números que não mentem.</h2>
+        <div class="trust-row" style="margin-top:3.5rem">
+          <div class="trust-item">
+            <div class="t-num" data-target="1000000" data-prefix="R$ " data-format="money">R$ 0</div>
+            <div class="t-lbl">liberados este mês</div>
+          </div>
+          <div class="trust-item">
+            <div class="t-num" data-target="385" data-prefix="+">+0</div>
+            <div class="t-lbl">CNPJs aprovados</div>
+          </div>
+          <div class="trust-item">
+            <div class="t-num" data-target="8" data-suffix=" min">0 min</div>
+            <div class="t-lbl">tempo médio de análise</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCENE 7: TESTIMONIALS ── -->
+  <div class="sep"></div>
+  <section class="story-section">
+    <div style="max-width:1100px;width:100%">
+      <div class="reveal" style="margin-bottom:3rem">
+        <div class="scene-eye">Depoimentos</div>
+        <div class="h-rule"></div>
+        <h2 class="scene-h2">Quem já deu o próximo passo.</h2>
+      </div>
+      <div class="testi-strip reveal">
+        <div class="testi-c">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-q">"Precisava de capital de giro para estoque. <em>Aprovação em menos de 1 hora</em>. Dinheiro na conta PJ no dia seguinte."</p>
+          <div class="testi-who">
+            <div class="testi-av">MR</div>
+            <div><div class="testi-nm">Marcos Ribeiro</div><div class="testi-mt">MEI · Comércio · São Paulo, SP</div></div>
+          </div>
+        </div>
+        <div class="testi-c">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-q">"Abri a segunda unidade do restaurante com o crédito. Foi <em>simples, rápido e sem burocracia</em>. Processo pensado para quem tem CNPJ."</p>
+          <div class="testi-who">
+            <div class="testi-av">CA</div>
+            <div><div class="testi-nm">Camila Alves</div><div class="testi-mt">Restaurante · Belo Horizonte, MG</div></div>
+          </div>
+        </div>
+        <div class="testi-c">
+          <div class="testi-stars">★★★★★</div>
+          <p class="testi-q">"Renovei a frota da transportadora. <em>R$ 50 mil aprovados em 2 dias.</em> Nunca tinha visto algo tão rápido para PJ."</p>
+          <div class="testi-who">
+            <div class="testi-av">FS</div>
+            <div><div class="testi-nm">Felipe Santos</div><div class="testi-mt">Transportes · Franca, SP</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCENE 8: FINAL CTA ── -->
+  <div class="sep"></div>
+  <section id="scene-cta">
+    <div class="cta-glow"></div>
+    <div class="cta-inner reveal">
+      <h2 class="cta-h2">Seu próximo passo</h2>
+      <p class="cta-sub">Análise gratuita para CNPJ. Simule parcela e taxa antes de qualquer consulta. Exclusivo para empresas e MEIs.</p>
+      <div class="cta-actions">
+        <button class="btn-glow" onclick="goToFormulario()"><span>Simular gratuitamente →</span></button>
+      </div>
+      <p style="margin-top:1.5rem;font-size:.75rem;color:var(--muted)">"Crédito inteligente para quem empreende de verdade."</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="fl">
+    <img src="/nexus-logo.png" alt="Crédito Inteligente">
+  </div>
+  <div class="fr">
+    <div>© 2025 Crédito Inteligente · Empréstimos exclusivos para CNPJ</div>
+    <div>Taxas sujeitas à análise · CNPJ 66.149.996/0001-00</div>
+  </div>
+</footer>
+
+<!-- CHAT BOT -->
+<button id="bot-btn" onclick="toggleBot()" aria-label="Assistente">💬</button>
+<div id="bot-panel">
+  <div class="bot-head">
+    <div class="bot-avatar"><img src="/nexus-logo.png" alt=""></div>
+    <div class="bot-head-info">
+      <div class="bot-head-name">Assistente</div>
+      <div class="bot-head-status">🟢 Online agora</div>
+    </div>
+  </div>
+  <div class="bot-body">
+    <div class="bot-msg">Atendemos exclusivamente empresas com CNPJ. Como posso ajudar?</div>
+    <div class="bot-opts">
+      <div class="bot-opt" onclick="botSelect('💼 Preciso de capital de giro')">💼 Capital de giro</div>
+      <div class="bot-opt" onclick="botSelect('📈 Quero expandir meu negócio')">📈 Expandir o negócio</div>
+      <div class="bot-opt" onclick="botSelect('🏭 Financiar equipamentos')">🏭 Equipamentos</div>
+      <div class="bot-opt" onclick="botSelect('✅ Tenho CNPJ ativo')">✅ Tenho CNPJ ativo</div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── CANVAS PARTICLE FIELD ── */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], mouse = {x:-999,y:-999};
+const N = 90;
+
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+window.addEventListener('resize',resize);resize();
+
+class Particle{
+  constructor(){this.reset(true)}
+  reset(init=false){
+    this.x=Math.random()*W;
+    this.y=init?Math.random()*H:Math.random()*H;
+    this.size=Math.random()*1.8+.3;
+    this.speedX=(Math.random()-.5)*.25;
+    this.speedY=-Math.random()*.18-.05;
+    this.opacity=Math.random()*.5+.1;
+    this.color=Math.random()>.5?'0,87,255':'0,163,255';
+  }
+  update(){
+    const dx=this.x-mouse.x, dy=this.y-mouse.y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<120){const f=120/dist;this.x+=dx/dist*f*.4;this.y+=dy/dist*f*.4}
+    this.x+=this.speedX;this.y+=this.speedY;
+    if(this.y<-10||this.x<-10||this.x>W+10)this.reset();
+  }
+  draw(){
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${this.color},${this.opacity})`;
+    ctx.fill();
+  }
+}
+
+for(let i=0;i<N;i++)particles.push(new Particle());
+
+function drawConnections(){
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const dx=particles[i].x-particles[j].x;
+      const dy=particles[i].y-particles[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120){
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle=`rgba(0,87,255,${.12*(1-d/120)})`;
+        ctx.lineWidth=.5;ctx.stroke();
+      }
+    }
+  }
+}
+
+function animate(){
+  ctx.clearRect(0,0,W,H);
+  particles.forEach(p=>{p.update();p.draw()});
+  drawConnections();
+  requestAnimationFrame(animate);
+}
+animate();
+
+window.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY});
+window.addEventListener('mouseleave',()=>{mouse.x=-999;mouse.y=-999});
+
+/* ── SCROLL PROGRESS + CINEMATIC FX ── */
+const progressBar = document.getElementById('progress');
+const scrollHUD = document.getElementById('scroll-hud');
+const hudNum = document.getElementById('hud-num');
+const hudBar = document.getElementById('hud-bar');
+
+function wrapCinematicSections(){
+  const hero = document.getElementById('scene-hero');
+  if(hero && !hero.querySelector('.scene-inner')){
+    const wrap = document.createElement('div');
+    wrap.className = 'scene-inner';
+    while(hero.firstChild) wrap.appendChild(hero.firstChild);
+    hero.appendChild(wrap);
+    hero.classList.add('cinematic-section');
+  }
+  document.querySelectorAll('.story-section, #scene-cta, #scene-benefits').forEach(section=>{
+    section.classList.add('cinematic-section');
+    let inner = section.querySelector('.scene-content, .cta-inner');
+    if(!inner && section.id === 'scene-benefits'){
+      inner = section.querySelector('div[style*="max-width"]');
+    }
+    if(inner) inner.classList.add('scene-inner');
+  });
+}
+wrapCinematicSections();
+
+function updateCinematicScroll(){
+  const scroll = window.scrollY;
+  const max = Math.max(1, document.body.scrollHeight - window.innerHeight);
+  const pct = Math.round((scroll / max) * 100);
+  progressBar.style.width = pct + '%';
+  document.getElementById('nav').classList.toggle('scrolled', scroll > 60);
+  if(hudNum) hudNum.textContent = pct;
+  if(hudBar) hudBar.style.width = pct + '%';
+  if(scrollHUD) scrollHUD.classList.toggle('vis', scroll > 100 && scroll < max - 80);
+
+  const vh = window.innerHeight;
+  const entryStart = vh * 0.92;
+  const entryEnd = vh * 0.18;
+
+  document.querySelectorAll('#scene-hero, .cinematic-section').forEach(section=>{
+    const inner = section.querySelector('.scene-inner');
+    if(!inner) return;
+    const rect = section.getBoundingClientRect();
+
+    let translateY, opacity, scale, blur;
+
+    if(rect.top >= entryStart){
+      translateY = 160;
+      opacity = 0;
+      scale = 0.86;
+      blur = 10;
+    } else if(rect.top > entryEnd){
+      const p = 1 - (rect.top - entryEnd) / (entryStart - entryEnd);
+      translateY = (1 - p) * 160;
+      opacity = 0.15 + p * 0.85;
+      scale = 0.86 + p * 0.14;
+      blur = (1 - p) * 10;
+    } else if(rect.bottom > vh * 0.12){
+      translateY = 0;
+      opacity = 1;
+      scale = 1;
+      blur = 0;
+    } else {
+      const exitP = 1 - rect.bottom / (vh * 0.12);
+      translateY = -exitP * 110;
+      opacity = Math.max(0, 1 - exitP * 0.65);
+      scale = 1 - exitP * 0.06;
+      blur = exitP * 6;
+    }
+
+    inner.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+    inner.style.opacity = opacity;
+    inner.style.filter = blur > 0.4 ? `blur(${blur}px)` : '';
+  });
+
+  document.querySelectorAll('.ambient-orb').forEach((orb, i)=>{
+    orb.style.transform = `translateY(${-scroll * (0.025 + i * 0.015)}px)`;
+  });
+}
+
+window.addEventListener('scroll', updateCinematicScroll, {passive:true});
+updateCinematicScroll();
+
+/* ── SMOOTH SCROLL (Lenis) ── */
+(function loadLenis(){
+  const s = document.createElement('script');
+  s.src = 'https://unpkg.com/lenis@1.1.18/dist/lenis.min.js';
+  s.onload = ()=>{
+    const lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+    function raf(t){ lenis.raf(t); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    lenis.on('scroll', updateCinematicScroll);
+  };
+  document.head.appendChild(s);
+})();
+
+/* ── REVEAL ON SCROLL ── */
+const revealEls = document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
+const ro = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('vis');
+      e.target.style.transitionDelay = e.target.dataset.delay||'0s';
+    }
+  });
+},{threshold:.12});
+revealEls.forEach(el=>ro.observe(el));
+
+/* ── ANIMATED COUNTERS ── */
+const counters = document.querySelectorAll('[data-target]');
+const co = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target;
+    const target=parseInt(el.dataset.target);
+    const prefix=el.dataset.prefix||'';
+    const suffix=el.dataset.suffix||'';
+    const fmt=el.dataset.format;
+    let start=0,dur=1800,startTime=null;
+    function tick(ts){
+      if(!startTime)startTime=ts;
+      const p=Math.min((ts-startTime)/dur,1);
+      const ease=1-Math.pow(1-p,3);
+      const val=Math.round(target*ease);
+      if(fmt==='money'){
+        el.textContent='R$ '+val.toLocaleString('pt-BR');
+      } else {
+        el.textContent=prefix+val.toLocaleString('pt-BR')+suffix;
+      }
+      if(p<1)requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+    co.unobserve(el);
+  });
+},{threshold:.5});
+counters.forEach(c=>co.observe(c));
+
+/* ── SIMULATOR ── */
+function calcSim(v){
+  v=parseInt(v);
+  document.getElementById('s-val').textContent=v.toLocaleString('pt-BR');
+}
+
+function scrollToSim(){
+  document.getElementById('scene-how').scrollIntoView({behavior:'smooth'});
+}
+
+function goToFormulario(){ window.location.assign('/formulario'); }
+
+/* ── BOT ── */
+function toggleBot(){document.getElementById('bot-panel').classList.toggle('open')}
+function botSelect(msg){
+  const b=document.getElementById('bot-panel').querySelector('.bot-body');
+  b.innerHTML=`<div class="bot-msg">Entendido! <strong>${msg}</strong>. Vou te direcionar para a simulação ideal.</div>
+  <button class="btn-sim" style="margin-top:.75rem;font-size:.85rem;padding:.75rem" onclick="goToFormulario();toggleBot()">Iniciar simulação →</button>`;
+}
+
+/* ── BENEFIT CARDS STAGGER ── */
+document.querySelectorAll('.benefit-card').forEach((c,i)=>{
+  c.style.opacity='0';c.style.transform='translateY(32px)';
+  const obs4=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){
+      setTimeout(()=>{
+        c.style.transition='opacity .6s ease,transform .6s ease,box-shadow .4s,border-color .4s';
+        c.style.opacity='1';c.style.transform='translateY(0)';
+      },i*100);
+      obs4.disconnect();
+    }
+  },{threshold:.1});
+  obs4.observe(c);
+  c.addEventListener('click',()=>{
+    if(window.matchMedia('(max-width:768px)').matches){
+      document.querySelectorAll('.benefit-card.is-open').forEach(el=>{
+        if(el!==c)el.classList.remove('is-open');
+      });
+      c.classList.toggle('is-open');
+    }
+  });
+});
+
+/* ── STEP ITEMS STAGGER ── */
+document.querySelectorAll('.step-item').forEach((s,i)=>{
+  s.style.opacity='0';s.style.transform='translateX(30px)';
+  const obs3=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){
+      setTimeout(()=>{
+        s.style.transition='opacity .6s ease,transform .6s ease';
+        s.style.opacity='1';s.style.transform='translateX(0)';
+      },i*120);
+      obs3.disconnect();
+    }
+  },{threshold:.2});
+  obs3.observe(s);
+});
+</script>
+</body>
+</html>

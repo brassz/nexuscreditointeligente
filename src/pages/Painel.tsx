@@ -65,6 +65,7 @@ type StatusFilter = "pendente" | "contatado" | "todos";
 const PIE_COLORS = ["#00C0FF", "#0057FF"];
 
 function cnpjDisplay(cliente: Cliente): string {
+  if (cliente.cnpj) return cliente.cnpj;
   if (cliente.trabalha_clt) return "—";
   if (cliente.possui_cnpj === null) return "—";
   if (cliente.possui_cnpj && cliente.profissao) return cliente.profissao;

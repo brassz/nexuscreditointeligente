@@ -21,6 +21,7 @@ export interface Cliente {
   valor_desejado: string;
   regiao?: string | null;
   cidade: string;
+  cnpj?: string | null;
   contatado: boolean;
   origem?: string | null;
   created_at: string;

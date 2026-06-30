@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { supabase } from "@/lib/supabase";
-import { cn, formatCurrency, onlyDigits, redirectToHome } from "@/lib/utils";
+import { cn, formatCnpj, formatCurrency, isValidCnpj, onlyDigits, redirectToHome } from "@/lib/utils";
 
 type StepId =
   | "welcome"
@@ -34,6 +34,7 @@ interface FormData {
   possuiAvalista: boolean | null;
   nomeCompleto: string;
   whatsapp: string;
+  cnpj: string;
 }
 
 const CIDADE_ATENDIDA = "Franca";
@@ -51,6 +52,7 @@ const initialForm: FormData = {
   possuiAvalista: null,
   nomeCompleto: "",
   whatsapp: "",
+  cnpj: "",
 };
 
 function YesNoButtons({
@@ -146,6 +148,12 @@ export default function Formulario() {
         if (onlyDigits(form.whatsapp).length < 10) {
           return "WhatsApp deve ter no mínimo 10 dígitos.";
         }
+        if (onlyDigits(form.cnpj).length !== 14) {
+          return "Informe o CNPJ completo com 14 dígitos.";
+        }
+        if (!isValidCnpj(form.cnpj)) {
+          return "CNPJ inválido. Verifique os números digitados.";
+        }
         return null;
       }
       default:
@@ -192,6 +200,7 @@ export default function Formulario() {
       valor_desejado: String(form.valor),
       regiao: form.regiao,
       cidade: form.cidade.trim(),
+      cnpj: formatCnpj(form.cnpj),
       origem: "formulario",
     };
 
@@ -232,6 +241,10 @@ export default function Formulario() {
     setLoading(false);
     setStep("success");
   };
+
+  const cnpjDigits = onlyDigits(form.cnpj);
+  const cnpjComplete = cnpjDigits.length === 14;
+  const cnpjValid = cnpjComplete && isValidCnpj(form.cnpj);
 
   return (
     <div className="min-h-screen bg-[#060810]">
@@ -430,6 +443,40 @@ export default function Formulario() {
                           placeholder="(16) 99999-9999"
                           inputMode="tel"
                         />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="cnpj">CNPJ da empresa</Label>
+                        <Input
+                          id="cnpj"
+                          value={form.cnpj}
+                          onChange={(e) =>
+                            setForm((f) => ({
+                              ...f,
+                              cnpj: formatCnpj(e.target.value),
+                            }))
+                          }
+                          placeholder="00.000.000/0000-00"
+                          inputMode="numeric"
+                          className={cn(
+                            cnpjComplete &&
+                              (cnpjValid
+                                ? "border-green-500/50 focus-visible:ring-green-500/40"
+                                : "border-red-500/50 focus-visible:ring-red-500/40")
+                          )}
+                        />
+                        {cnpjDigits.length > 0 && cnpjDigits.length < 14 && (
+                          <p className="text-xs text-muted-foreground">
+                            Digite os 14 dígitos do CNPJ.
+                          </p>
+                        )}
+                        {cnpjComplete && cnpjValid && (
+                          <p className="text-xs text-green-400">CNPJ válido.</p>
+                        )}
+                        {cnpjComplete && !cnpjValid && (
+                          <p className="text-xs text-red-400">
+                            CNPJ inválido. Confira se digitou corretamente.
+                          </p>
+                        )}
                       </div>
                     </div>
                   </>

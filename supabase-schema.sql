@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS clientes (
   valor_desejado TEXT NOT NULL,
   regiao TEXT,
   cidade TEXT NOT NULL,
+  cnpj TEXT,
   contatado BOOLEAN NOT NULL DEFAULT false,
   origem TEXT DEFAULT 'conversa',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -32,3 +33,6 @@ CREATE POLICY "Permitir select publico" ON clientes
 
 CREATE POLICY "Permitir update publico" ON clientes
   FOR UPDATE USING (true);
+
+-- Se a tabela já existir, adicione a coluna do CNPJ:
+-- ALTER TABLE clientes ADD COLUMN IF NOT EXISTS cnpj TEXT;

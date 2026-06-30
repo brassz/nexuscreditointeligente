@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    { "source": "/formulario", "destination": "/app.html" },
+    { "source": "/formulario/:path*", "destination": "/app.html" },
+    { "source": "/painel", "destination": "/app.html" },
+    { "source": "/painel/:path*", "destination": "/app.html" },
+    { "source": "/conversa", "destination": "/app.html" },
+    { "source": "/conversa/:path*", "destination": "/app.html" },
+    { "source": "/admin", "destination": "/app.html" },
+    { "source": "/admin/:path*", "destination": "/app.html" }
+  ]
+}

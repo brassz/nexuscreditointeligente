@@ -193,7 +193,7 @@ export const NexusLandingContent: React.FC<Props> = ({
             <Rule />
             <H2>O fornecedor cobra amanhã. O banco responde: "Em análise."</H2>
             <Body>
-              Dias no vácuo. CNPJ consultado sem garantia de aprovação. Quem
+              Dias em espera. CNPJ consultado sem garantia de aprovação. Quem
               precisa de capital de giro paga o preço da burocracia.
             </Body>
           </div>

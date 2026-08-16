@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -39,6 +39,8 @@ interface FormData {
 
 const CIDADE_ATENDIDA = "Franca";
 const REGIAO_ATENDIDA = "São Paulo";
+const WHATSAPP_ATENDIMENTO = "+55 (16) 98208-8844";
+const WHATSAPP_ATENDIMENTO_DIGITS = "5516982088844";
 
 const initialForm: FormData = {
   valor: 500,
@@ -245,6 +247,10 @@ export default function Formulario() {
   const cnpjDigits = onlyDigits(form.cnpj);
   const cnpjComplete = cnpjDigits.length === 14;
   const cnpjValid = cnpjComplete && isValidCnpj(form.cnpj);
+  const isCompatibleLead =
+    form.empresaEmFranca === true &&
+    form.cidade === CIDADE_ATENDIDA &&
+    cnpjValid;
 
   return (
     <div className="min-h-screen bg-[#060810]">
@@ -274,7 +280,7 @@ export default function Formulario() {
       <div className="container-custom py-8">
         {step !== "welcome" && step !== "success" && (
           <div className="mx-auto mb-6 max-w-lg">
-            <div className="mb-2 flex justify-between text-xs text-muted-foreground">
+            <div className="mb-2 flex justify-between text-xs text-white/75">
               <span>Progresso</span>
               <span>{Math.round(progressPercent)}%</span>
             </div>
@@ -306,7 +312,7 @@ export default function Formulario() {
                       <h2 className="font-display text-2xl font-bold text-white">
                         Crédito para sua empresa
                       </h2>
-                      <p className="mt-3 text-secondary">
+                      <p className="mt-3 text-white/85">
                         Atendemos exclusivamente empresas e MEIs com CNPJ ativo em{" "}
                         <strong className="text-white">Franca, SP</strong>.
                         Preencha os dados e simule a melhor condição.
@@ -330,12 +336,12 @@ export default function Formulario() {
                       <h2 className="font-display text-xl font-bold">
                         Quanto sua empresa precisa?
                       </h2>
-                      <p className="mt-1 text-sm text-secondary">
+                      <p className="mt-1 text-sm text-white/80">
                         Arraste o slider para definir o valor desejado.
                       </p>
                     </div>
                     <div className="rounded-xl bg-white/5 p-6 text-center">
-                      <p className="text-sm text-secondary">Valor selecionado</p>
+                      <p className="text-sm text-white/80">Valor selecionado</p>
                       <p className="font-display text-4xl font-bold text-nexus-neon">
                         {formatCurrency(form.valor)}
                       </p>
@@ -349,7 +355,7 @@ export default function Formulario() {
                         setForm((f) => ({ ...f, valor: v }))
                       }
                     />
-                    <div className="flex justify-between text-xs text-muted-foreground">
+                    <div className="flex justify-between text-xs text-white/70">
                       <span>R$ 100</span>
                       <span>R$ 2.000</span>
                     </div>
@@ -380,7 +386,7 @@ export default function Formulario() {
                     <h2 className="font-display text-xl font-bold">
                       Sua empresa está em Franca, SP?
                     </h2>
-                    <p className="text-sm text-secondary">
+                    <p className="text-sm text-white/80">
                       Atendemos exclusivamente a cidade de{" "}
                       <strong className="text-white">Franca</strong>.
                     </p>
@@ -465,7 +471,7 @@ export default function Formulario() {
                           )}
                         />
                         {cnpjDigits.length > 0 && cnpjDigits.length < 14 && (
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-xs text-white/70">
                             Digite os 14 dígitos do CNPJ.
                           </p>
                         )}
@@ -485,13 +491,36 @@ export default function Formulario() {
                 {step === "success" && (
                   <div className="py-4 text-center">
                     <CheckCircle2 className="mx-auto h-16 w-16 text-nexus-neon" />
-                    <h2 className="mt-4 font-display text-2xl font-bold">
+                    <h2 className="mt-4 font-display text-2xl font-bold text-white">
                       Cadastro enviado com sucesso!
                     </h2>
-                    <p className="mt-3 text-secondary">
-                      Nossa equipe entrará em contato
-                      em breve.
-                    </p>
+                    {isCompatibleLead ? (
+                      <>
+                        <p className="mt-3 text-white/85">
+                          Seu perfil é compatível: empresa em Franca com CNPJ
+                          válido. Fale agora com o atendimento.
+                        </p>
+                        <p className="mt-4 font-display text-xl font-bold text-nexus-neon">
+                          {WHATSAPP_ATENDIMENTO}
+                        </p>
+                        <a
+                          href={`https://wa.me/${WHATSAPP_ATENDIMENTO_DIGITS}?text=${encodeURIComponent(
+                            `Olá! Acabei de enviar meu cadastro. Empresa em Franca, CNPJ ${form.cnpj}.`
+                          )}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#0057FF] to-[#00C0FF] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:-translate-y-0.5"
+                        >
+                          <MessageCircle className="h-4 w-4" />
+                          Entrar em contato
+                        </a>
+                      </>
+                    ) : (
+                      <p className="mt-3 text-white/85">
+                        Recebemos seu cadastro. No momento o atendimento é
+                        exclusivo para empresas de Franca com CNPJ válido.
+                      </p>
+                    )}
                     <Button variant="cta" size="lg" className="mt-6" onClick={redirectToHome}>
                       Voltar ao início
                     </Button>

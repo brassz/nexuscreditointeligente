@@ -38,8 +38,12 @@ body{
 #nav.scrolled{background:rgba(6,8,16,0.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,163,255,0.1)}
 .logo{display:flex;align-items:center;line-height:0}
 .logo img{height:36px;width:auto;display:block;filter:drop-shadow(0 0 10px rgba(0,163,255,.45))}
-footer .fl{display:flex;align-items:center;line-height:0}
+footer .fl{display:flex;flex-direction:column;align-items:flex-start;gap:.65rem;line-height:1.35;max-width:420px}
 footer .fl img{height:28px;width:auto;display:block;filter:drop-shadow(0 0 8px rgba(0,163,255,.35))}
+footer .fl .legal-name{
+  font-family:'Space Grotesk',sans-serif;font-size:.72rem;font-weight:700;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--white);line-height:1.4;
+}
 .nav-pill{
   background:rgba(0,87,255,0.15);border:1px solid rgba(0,87,255,0.4);
   color:var(--white);border-radius:50px;padding:.5rem 1.5rem;font-size:.85rem;font-weight:600;
@@ -398,47 +402,6 @@ footer{
 }
 footer .fr{font-size:.75rem;color:var(--muted);text-align:right}
 
-/* ── CHAT BOT FLOAT ── */
-#bot-btn{
-  position:fixed;bottom:2rem;right:2rem;z-index:200;
-  width:60px;height:60px;border-radius:50%;border:none;cursor:pointer;
-  background:linear-gradient(135deg,var(--blue),var(--neon));
-  font-size:1.5rem;
-  box-shadow:0 4px 32px rgba(0,87,255,.6);
-  transition:all .2s;display:flex;align-items:center;justify-content:center;
-}
-#bot-btn:hover{transform:scale(1.1);box-shadow:0 8px 48px rgba(0,87,255,.8)}
-#bot-panel{
-  position:fixed;bottom:5.5rem;right:2rem;z-index:200;
-  width:310px;background:rgba(10,14,28,.97);
-  border:1px solid rgba(0,163,255,.2);border-radius:22px;
-  overflow:hidden;display:none;
-  box-shadow:0 24px 80px rgba(0,0,0,.6);backdrop-filter:blur(20px);
-}
-#bot-panel.open{display:block}
-.bot-head{
-  padding:.9rem 1.25rem;
-  background:linear-gradient(135deg,var(--blue),var(--neon));
-  display:flex;align-items:center;gap:.6rem;
-}
-.bot-avatar{width:30px;height:30px;display:flex;align-items:center;justify-content:center}
-.bot-avatar img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 6px rgba(0,163,255,.5))}
-.bot-head-info{font-size:.8rem}
-.bot-head-name{font-weight:700}
-.bot-head-status{opacity:.85;font-size:.68rem}
-.bot-body{padding:1rem 1.1rem}
-.bot-msg{
-  background:rgba(255,255,255,.06);border-radius:12px 12px 12px 4px;
-  padding:.7rem .9rem;font-size:.825rem;line-height:1.5;margin-bottom:.8rem;
-}
-.bot-opts{display:flex;flex-direction:column;gap:.4rem}
-.bot-opt{
-  background:rgba(0,87,255,.1);border:1px solid rgba(0,87,255,.2);
-  border-radius:10px;padding:.5rem .9rem;font-size:.78rem;font-weight:600;
-  color:var(--white);cursor:pointer;transition:all .15s;text-align:left;
-}
-.bot-opt:hover{background:rgba(0,87,255,.25);border-color:rgba(0,87,255,.5)}
-
 /* PROGRESS BAR */
 #progress{
   position:fixed;top:0;left:0;height:2px;z-index:999;
@@ -504,6 +467,7 @@ footer .fr{font-size:.75rem;color:var(--muted);text-align:right}
   .benefit-card.is-open{transform:translateY(-12px);border-color:rgba(0,163,255,.45)}
   #nav{padding:1rem 1.5rem}
   footer{flex-direction:column;gap:1rem;text-align:center}
+  footer .fl{align-items:center}
   footer .fr{text-align:center}
   #scroll-hud{display:none}
 }
@@ -842,34 +806,14 @@ src="https://www.facebook.com/tr?id=1719842652577537&ev=PageView&noscript=1"
 
 <footer>
   <div class="fl">
-    <img src="/nexus-logo.png" alt="Crédito Inteligente">
+    <img src="/nexus-logo.png" alt="NEXUS CREDITO INTELIGENTE EMPRESA SIMPLES DE CREDITO LTDA">
+    <div class="legal-name">NEXUS CREDITO INTELIGENTE EMPRESA SIMPLES DE CREDITO LTDA</div>
   </div>
   <div class="fr">
     <div>© 2025 Crédito Inteligente · Empréstimos exclusivos para CNPJ</div>
     <div>Taxas sujeitas à análise · CNPJ 66.149.996/0001-00</div>
   </div>
 </footer>
-
-<!-- CHAT BOT -->
-<button id="bot-btn" onclick="toggleBot()" aria-label="Assistente">💬</button>
-<div id="bot-panel">
-  <div class="bot-head">
-    <div class="bot-avatar"><img src="/nexus-logo.png" alt=""></div>
-    <div class="bot-head-info">
-      <div class="bot-head-name">Assistente</div>
-      <div class="bot-head-status">🟢 Online agora</div>
-    </div>
-  </div>
-  <div class="bot-body">
-    <div class="bot-msg">Atendemos exclusivamente empresas com CNPJ. Como posso ajudar?</div>
-    <div class="bot-opts">
-      <div class="bot-opt" onclick="botSelect('💼 Preciso de capital de giro')">💼 Capital de giro</div>
-      <div class="bot-opt" onclick="botSelect('📈 Quero expandir meu negócio')">📈 Expandir o negócio</div>
-      <div class="bot-opt" onclick="botSelect('🏭 Financiar equipamentos')">🏭 Equipamentos</div>
-      <div class="bot-opt" onclick="botSelect('✅ Tenho CNPJ ativo')">✅ Tenho CNPJ ativo</div>
-    </div>
-  </div>
-</div>
 
 <script>
 /* ── CANVAS PARTICLE FIELD ── */
@@ -1086,14 +1030,6 @@ function scrollToSim(){
 }
 
 function goToFormulario(){ window.location.assign('/formulario'); }
-
-/* ── BOT ── */
-function toggleBot(){document.getElementById('bot-panel').classList.toggle('open')}
-function botSelect(msg){
-  const b=document.getElementById('bot-panel').querySelector('.bot-body');
-  b.innerHTML=`<div class="bot-msg">Entendido! <strong>${msg}</strong>. Vou te direcionar para a simulação ideal.</div>
-  <button class="btn-sim" style="margin-top:.75rem;font-size:.85rem;padding:.75rem" onclick="goToFormulario();toggleBot()">Iniciar simulação →</button>`;
-}
 
 /* ── BENEFIT CARDS STAGGER ── */
 document.querySelectorAll('.benefit-card').forEach((c,i)=>{

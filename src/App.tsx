@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import Formulario from "@/pages/Formulario";
 import Painel from "@/pages/Painel";
 import Conversa from "@/pages/Conversa";
 import Admin from "@/pages/Admin";
@@ -9,6 +8,15 @@ declare global {
   interface Window {
     fbq?: (...args: unknown[]) => void;
   }
+}
+
+const WHATSAPP_URL = "https://wa.me/5516982088844";
+
+function RedirectWhatsApp() {
+  useEffect(() => {
+    window.location.replace(WHATSAPP_URL);
+  }, []);
+  return null;
 }
 
 function PixelPageView() {
@@ -31,11 +39,11 @@ export default function App() {
     <>
       <PixelPageView />
       <Routes>
-        <Route path="/formulario" element={<Formulario />} />
+        <Route path="/formulario" element={<RedirectWhatsApp />} />
         <Route path="/painel" element={<Painel />} />
         <Route path="/conversa" element={<Conversa />} />
         <Route path="/admin" element={<Admin />} />
-        <Route path="*" element={<Navigate to="/formulario" replace />} />
+        <Route path="*" element={<Navigate to="/painel" replace />} />
       </Routes>
     </>
   );

@@ -511,7 +511,7 @@ src="https://www.facebook.com/tr?id=1719842652577537&ev=PageView&noscript=1"
   <a href="/" class="logo" aria-label="Crédito Inteligente">
     <img src="/nexus-logo.png" alt="Crédito Inteligente">
   </a>
-  <button class="nav-pill" onclick="goToFormulario()">Simular agora</button>
+  <button class="nav-pill" onclick="goToWhatsApp()">Simular agora</button>
 </nav>
 
 <div id="scroll-wrap">
@@ -525,7 +525,7 @@ src="https://www.facebook.com/tr?id=1719842652577537&ev=PageView&noscript=1"
     </h1>
     <div class="hero-cta-group">
       <div class="hero-btns">
-        <button class="btn-glow" onclick="goToFormulario()"><span>Simular gratuitamente →</span></button>
+        <button class="btn-glow" onclick="goToWhatsApp()"><span>Simular gratuitamente →</span></button>
       </div>
       <div class="scroll-hint">
         <span>Role para descobrir</span>
@@ -597,7 +597,7 @@ src="https://www.facebook.com/tr?id=1719842652577537&ev=PageView&noscript=1"
           <div style="display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-top:-.75rem;margin-bottom:1.25rem">
             <span>R$ 500</span><span>R$ 50.000</span>
           </div>
-          <button class="btn-sim" onclick="goToFormulario()">Quero essa proposta →</button>
+          <button class="btn-sim" onclick="goToWhatsApp()">Quero essa proposta →</button>
           <p style="text-align:center;font-size:.68rem;color:var(--muted);margin-top:.75rem">Exclusivo CNPJ · valores estimados · sujeitos a análise</p>
         </div>
       </div>
@@ -796,7 +796,7 @@ src="https://www.facebook.com/tr?id=1719842652577537&ev=PageView&noscript=1"
       <h2 class="cta-h2">Seu próximo passo</h2>
       <p class="cta-sub">Análise gratuita para CNPJ. Simule parcela e taxa antes de qualquer consulta. Exclusivo para empresas e MEIs.</p>
       <div class="cta-actions">
-        <button class="btn-glow" onclick="goToFormulario()"><span>Simular gratuitamente →</span></button>
+        <button class="btn-glow" onclick="goToWhatsApp()"><span>Simular gratuitamente →</span></button>
       </div>
       <p style="margin-top:1.5rem;font-size:.75rem;color:var(--muted)">"Crédito inteligente para quem empreende de verdade."</p>
     </div>
@@ -1029,7 +1029,9 @@ function scrollToSim(){
   document.getElementById('scene-how').scrollIntoView({behavior:'smooth'});
 }
 
-function goToFormulario(){ window.location.assign('/formulario'); }
+function goToWhatsApp(){
+  window.location.assign('https://wa.me/5516982088844');
+}
 
 /* ── BENEFIT CARDS STAGGER ── */
 document.querySelectorAll('.benefit-card').forEach((c,i)=>{

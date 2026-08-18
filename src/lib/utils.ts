@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function redirectToFormulario() {
-  window.location.assign("/formulario");
+  window.location.assign("https://wa.me/5516982088844");
 }
 
 export function redirectToHome() {

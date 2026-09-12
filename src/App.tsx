@@ -10,11 +10,11 @@ declare global {
   }
 }
 
-const WHATSAPP_URL = "https://wa.me/5516982088844";
+const CADASTRO_URL = "https://gestaonexuscrm.online/cadastro/ed2b33b8ad731816210c798b1d8e5b90";
 
-function RedirectWhatsApp() {
+function RedirectCadastro() {
   useEffect(() => {
-    window.location.replace(WHATSAPP_URL);
+    window.location.replace(CADASTRO_URL);
   }, []);
   return null;
 }
@@ -39,7 +39,7 @@ export default function App() {
     <>
       <PixelPageView />
       <Routes>
-        <Route path="/formulario" element={<RedirectWhatsApp />} />
+        <Route path="/formulario" element={<RedirectCadastro />} />
         <Route path="/painel" element={<Painel />} />
         <Route path="/conversa" element={<Conversa />} />
         <Route path="/admin" element={<Admin />} />

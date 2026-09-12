@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function redirectToFormulario() {
-  window.location.assign("https://wa.me/5516982088844");
+  window.location.assign("https://gestaonexuscrm.online/cadastro/ed2b33b8ad731816210c798b1d8e5b90");
 }
 
 export function redirectToHome() {

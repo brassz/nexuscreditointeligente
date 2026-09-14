@@ -59,13 +59,13 @@ export default function Conversa() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#060810]">
-      <header className="border-b border-white/10 bg-[#0a0e1c] px-4 py-4">
+    <div className="flex min-h-screen flex-col bg-black">
+      <header className="border-b border-[#1f2a33] bg-[#212525] px-4 py-4">
         <div className="mx-auto flex max-w-lg items-center gap-3">
           <img
             src="/nexus-logo.png"
             alt="Crédito Inteligente"
-            className="h-10 w-auto drop-shadow-[0_0_10px_rgba(0,212,255,0.5)]"
+            className="h-10 w-auto"
           />
           <div>
             <p className="font-display font-bold">Assistente</p>

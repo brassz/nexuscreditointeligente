@@ -62,7 +62,7 @@ type CnpjFilter = "possui" | "nao" | "na" | "todos";
 type AvalistaFilter = "com" | "sem" | "todos";
 type StatusFilter = "pendente" | "contatado" | "todos";
 
-const PIE_COLORS = ["#00C0FF", "#0057FF"];
+const PIE_COLORS = ["#4169E1", "#8b9bb8"];
 
 function cnpjDisplay(cliente: Cliente): string {
   if (cliente.cnpj) return cliente.cnpj;
@@ -194,7 +194,7 @@ export default function Painel() {
 
   if (initialLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#060810]">
+      <div className="flex min-h-screen items-center justify-center bg-black">
         <div className="text-center">
           <Loader2 className="mx-auto h-10 w-10 animate-spin text-nexus-neon" />
           <p className="mt-4 text-secondary">Carregando painel...</p>
@@ -204,14 +204,14 @@ export default function Painel() {
   }
 
   return (
-    <div className="min-h-screen bg-[#060810] pb-12">
-      <header className="border-b border-white/10 bg-[#0a0e1c]/80 backdrop-blur-xl">
+    <div className="min-h-screen bg-black pb-12">
+      <header className="border-b border-[#1f2a33] bg-[#212525]/90 backdrop-blur-[10px]">
         <div className="container-custom flex flex-col gap-4 py-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <img
               src="/nexus-logo.png"
               alt="Crédito Inteligente"
-              className="h-9 w-auto drop-shadow-[0_0_12px_rgba(0,212,255,0.5)]"
+              className="h-9 w-auto"
             />
             <p className="mt-2 text-sm text-secondary">
               Painel Comercial · atualização a cada 5s
@@ -299,7 +299,7 @@ export default function Painel() {
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      background: "#0a0e1c",
+                      background: "#212525",
                       border: "1px solid rgba(255,255,255,0.1)",
                       borderRadius: "8px",
                     }}

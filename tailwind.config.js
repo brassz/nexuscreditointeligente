@@ -6,10 +6,13 @@ export default {
     extend: {
       colors: {
         nexus: {
-          neon: "#00C0FF",
-          blue: "#0057FF",
-          dark: "#060810",
-          card: "rgba(255,255,255,0.04)",
+          neon: "#4169E1",
+          blue: "#4169E1",
+          dark: "#000000",
+          card: "#181818",
+          carbon: "#212525",
+          sage: "#8b9bb8",
+          phosphor: "#e8eeff",
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -43,12 +46,12 @@ export default {
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "calc(var(--radius) - 4px)",
+        sm: "calc(var(--radius) - 8px)",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
-        display: ["Space Grotesk", "sans-serif"],
+        display: ["Inter Tight", "sans-serif"],
       },
       animation: {
         "fade-in": "fadeIn 0.5s ease forwards",

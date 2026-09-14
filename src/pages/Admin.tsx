@@ -5,7 +5,7 @@ import { redirectToHome } from "@/lib/utils";
 
 export default function Admin() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#060810] p-4">
+    <div className="flex min-h-screen items-center justify-center bg-black p-4">
       <Card className="max-w-md w-full">
         <CardHeader>
           <CardTitle>Painel Admin</CardTitle>

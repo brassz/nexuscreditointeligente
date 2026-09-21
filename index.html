@@ -314,23 +314,99 @@ footer .fr{font-size:var(--text-caption);color:var(--color-deep-fern);text-align
   .btn-ghost{width:100%}
 }
 </style>
+<!-- PIXEL META – NEXUS CRÉDITO INTELIGENTE (ID 1719842652577537) -->
+<link rel="preconnect" href="https://connect.facebook.net">
 <script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1719842652577537');
-fbq('track', 'PageView');
+(function () {
+  // 1) Só roda no domínio oficial (bloqueia testes em localhost)
+  if (!/nexuscreditointeligente\.com\.br$/.test(location.hostname)) return;
+
+  // 2) Código base do Meta
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+  n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+  document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+  var PIXEL_ID = '1719842652577537';
+  fbq('init', PIXEL_ID);
+  fbq('track', 'PageView');          // ÚNICO evento no carregamento
+
+  // Utilitários
+  function id(prefix) { return prefix + '' + Date.now() + '' + Math.random().toString(36).slice(2, 8); }
+  function once(key) {                // evita contar 2x o mesmo evento na mesma visita
+    try { if (sessionStorage.getItem(key)) return false; sessionStorage.setItem(key, '1'); } catch (e) {}
+    return true;
+  }
+  function isWhats(url) { return /wa\.me|whatsapp\.com|whatsapp:\/\//i.test(url || ''); }
+
+  // 3) CONTACT – clique em qualquer WhatsApp do site
+  function trackWhats(origem) {
+    if (!once('fb_contact')) return;
+    fbq('track', 'Contact', { content_name: 'WhatsApp', origem: origem }, { eventID: id('contact') });
+  }
+  // Abre o WhatsApp de um jeito que funciona dentro do navegador do
+  // Instagram/Facebook (iPhone e Android): mesma aba, sem pop-up,
+  // esperando o evento sair antes de trocar de app.
+  function abrirWhats(url) {
+    var destino = String(url);
+    var m = destino.match(/^https?:\/\/(api\.)?whatsapp\.com\/send\/?\?phone=(\d+)&?(.*)$/i);
+    if (m) destino = 'https://wa.me/' + m[2] + (m[3] ? '?' + m[3] : '');   // formato que abre direto no app
+    setTimeout(function () { location.href = destino; }, 350);
+  }
+  // links <a href="wa.me/..."> (inclusive criados depois do carregamento)
+  document.addEventListener('click', function (ev) {
+    var a = ev.target.closest && ev.target.closest('a[href]');
+    if (!a || !isWhats(a.href)) return;
+    trackWhats(a.textContent.trim().slice(0, 40) || 'link');
+    ev.preventDefault();               // target="_blank" é bloqueado em navegador de app
+    abrirWhats(a.href);
+  }, true);
+  // botões que abrem o WhatsApp via window.open (pop-up costuma ser bloqueado no celular)
+  var _open = window.open;
+  window.open = function (url) {
+    if (isWhats(url)) { trackWhats('botao'); abrirWhats(url); return null; }
+    return _open.apply(window, arguments);
+  };
+
+  // 4) Cliques nos botões de simulação (trajeto até o formulário)
+  document.addEventListener('click', function (ev) {
+    var el = ev.target.closest && ev.target.closest('a, button');
+    if (!el) return;
+    var txt = (el.textContent || '').trim().toLowerCase();
+    if (/simular|quero essa proposta/.test(txt) && !isWhats(el.href)) {
+      fbq('trackCustom', 'CliqueSimular', { botao: txt.slice(0, 40) });
+    }
+  }, true);
+
+  // 5) LEAD – só quando o formulário é enviado com os campos válidos
+  window.nexusLead = function (dados) {
+    if (!once('fb_lead')) return;
+    dados = dados || {};
+    // Correspondência avançada: o pixel criptografa sozinho antes de enviar
+    var ud = {};
+    if (dados.email) ud.em = String(dados.email).trim().toLowerCase();
+    if (dados.telefone) ud.ph = '55' + String(dados.telefone).replace(/\D/g, '').replace(/^55/, '');
+    if (Object.keys(ud).length) fbq('init', PIXEL_ID, ud);
+    fbq('track', 'Lead', { content_name: 'Formulario CNPJ' }, { eventID: id('lead') });
+  };
+
+  document.addEventListener('submit', function (ev) {
+    var form = ev.target;
+    if (form.checkValidity && !form.checkValidity()) return;   // formulário incompleto não conta
+    var get = function (sel) { var i = form.querySelector(sel); return i ? i.value : ''; };
+    window.nexusLead({
+      email: get('input[type=email], input[name*=mail i]'),
+      telefone: get('input[type=tel], input[name*=fone i], input[name*=phone i], input[name*=whats i]')
+    });
+  }, true);
+})();
 </script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1719842652577537&ev=PageView&noscript=1"/></noscript>
+<!-- ============ FIM DO PIXEL NEXUS ============ -->
 </head>
 <body>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1719842652577537&ev=PageView&noscript=1"
-/></noscript>
 
 <nav id="nav">
   <a href="/" class="logo" aria-label="Crédito Inteligente">

@@ -6,25 +6,87 @@
     <meta name="facebook-domain-verification" content="60l1zci5g7g3vm623hqwm4v5v0lhdf" />
     <title>Crédito Inteligente para CNPJ</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&family=Inter:opsz,wght@14..32,400;14..32,500&display=swap" rel="stylesheet" />
-    <!-- Meta Pixel Code -->
+    <!-- PIXEL META – NEXUS CRÉDITO INTELIGENTE (ID 1719842652577537) -->
+    <link rel="preconnect" href="https://connect.facebook.net">
     <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1719842652577537');
-    fbq('track', 'PageView');
+    (function () {
+      if (!/nexuscreditointeligente\.com\.br$/.test(location.hostname)) return;
+
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+      document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+      var PIXEL_ID = '1719842652577537';
+      fbq('init', PIXEL_ID);
+      fbq('track', 'PageView');
+
+      function id(prefix) { return prefix + '' + Date.now() + '' + Math.random().toString(36).slice(2, 8); }
+      function once(key) {
+        try { if (sessionStorage.getItem(key)) return false; sessionStorage.setItem(key, '1'); } catch (e) {}
+        return true;
+      }
+      function isWhats(url) { return /wa\.me|whatsapp\.com|whatsapp:\/\//i.test(url || ''); }
+
+      function trackWhats(origem) {
+        if (!once('fb_contact')) return;
+        fbq('track', 'Contact', { content_name: 'WhatsApp', origem: origem }, { eventID: id('contact') });
+      }
+      function abrirWhats(url) {
+        var destino = String(url);
+        var m = destino.match(/^https?:\/\/(api\.)?whatsapp\.com\/send\/?\?phone=(\d+)&?(.*)$/i);
+        if (m) destino = 'https://wa.me/' + m[2] + (m[3] ? '?' + m[3] : '');
+        setTimeout(function () { location.href = destino; }, 350);
+      }
+      document.addEventListener('click', function (ev) {
+        var a = ev.target.closest && ev.target.closest('a[href]');
+        if (!a || !isWhats(a.href)) return;
+        trackWhats(a.textContent.trim().slice(0, 40) || 'link');
+        ev.preventDefault();
+        abrirWhats(a.href);
+      }, true);
+      var _open = window.open;
+      window.open = function (url) {
+        if (isWhats(url)) { trackWhats('botao'); abrirWhats(url); return null; }
+        return _open.apply(window, arguments);
+      };
+
+      document.addEventListener('click', function (ev) {
+        var el = ev.target.closest && ev.target.closest('a, button');
+        if (!el) return;
+        var txt = (el.textContent || '').trim().toLowerCase();
+        if (/simular|quero essa proposta/.test(txt) && !isWhats(el.href)) {
+          fbq('trackCustom', 'CliqueSimular', { botao: txt.slice(0, 40) });
+        }
+      }, true);
+
+      window.nexusLead = function (dados) {
+        if (!once('fb_lead')) return;
+        dados = dados || {};
+        var ud = {};
+        if (dados.email) ud.em = String(dados.email).trim().toLowerCase();
+        if (dados.telefone) ud.ph = '55' + String(dados.telefone).replace(/\D/g, '').replace(/^55/, '');
+        if (Object.keys(ud).length) fbq('init', PIXEL_ID, ud);
+        fbq('track', 'Lead', { content_name: 'Formulario CNPJ' }, { eventID: id('lead') });
+      };
+
+      document.addEventListener('submit', function (ev) {
+        var form = ev.target;
+        if (form.checkValidity && !form.checkValidity()) return;
+        var get = function (sel) { var i = form.querySelector(sel); return i ? i.value : ''; };
+        window.nexusLead({
+          email: get('input[type=email], input[name*=mail i]'),
+          telefone: get('input[type=tel], input[name*=fone i], input[name*=phone i], input[name*=whats i]')
+        });
+      }, true);
+    })();
     </script>
-    <!-- End Meta Pixel Code -->
+    <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=1719842652577537&ev=PageView&noscript=1"/></noscript>
+    <!-- ============ FIM DO PIXEL NEXUS ============ -->
   </head>
   <body>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1719842652577537&ev=PageView&noscript=1"
-    /></noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

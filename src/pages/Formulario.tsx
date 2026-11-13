@@ -13,7 +13,7 @@ const CIDADES = [
   "Ibiraci",
 ];
 
-const WHATSAPP_NUM = "5516982088844";
+const WHATSAPP_NUM = "5516957822230";
 
 function formatMoney(v: number) {
   return v.toLocaleString("pt-BR");

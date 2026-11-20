@@ -1,0 +1,63 @@
+{
+  "fps": 30,
+  "transition": 15,
+  "totalFrames": 2556,
+  "scenes": [
+    {
+      "id": "abertura",
+      "text": "Empreender exige decisão, planejamento, e capital na hora certa.",
+      "seconds": 5.23,
+      "start": 0,
+      "frames": 339,
+      "voiceAt": 114
+    },
+    {
+      "id": "problema",
+      "text": "Fornecedor para pagar, estoque para repor, uma oportunidade que não espera. Quando o caixa aperta, a empresa não pode parar.",
+      "seconds": 9.22,
+      "start": 324,
+      "frames": 339,
+      "voiceAt": 21
+    },
+    {
+      "id": "solucao",
+      "text": "A Nexus Crédito Inteligente é especializada em crédito empresarial: uma solução pensada para empresas com CNPJ ativo, incluindo MEI.",
+      "seconds": 9.14,
+      "start": 648,
+      "frames": 339,
+      "voiceAt": 27
+    },
+    {
+      "id": "diferencial",
+      "text": "Nosso diferencial está na análise. Ela é interna: avaliamos o faturamento, a atividade e o histórico da sua empresa, sem consulta a Serasa ou SPC nesta modalidade. O crédito é sujeito a aprovação.",
+      "seconds": 14.59,
+      "start": 972,
+      "frames": 519,
+      "voiceAt": 21
+    },
+    {
+      "id": "online",
+      "text": "E tudo acontece online. Você simula valores e parcelas, envia os documentos pelo celular e acompanha cada etapa, sem sair da sua empresa.",
+      "seconds": 10.39,
+      "start": 1476,
+      "frames": 375,
+      "voiceAt": 21
+    },
+    {
+      "id": "publico",
+      "text": "Comércio, serviços, MEI, empresas em expansão: se o seu negócio tem CNPJ ativo, a Nexus foi pensada para você.",
+      "seconds": 9.12,
+      "start": 1836,
+      "frames": 339,
+      "voiceAt": 21
+    },
+    {
+      "id": "encerramento",
+      "text": "Nexus Crédito Inteligente. Seu negócio merece avançar. Acesse o site e faça sua simulação.",
+      "seconds": 8.5,
+      "start": 2160,
+      "frames": 396,
+      "voiceAt": 36
+    }
+  ]
+}
